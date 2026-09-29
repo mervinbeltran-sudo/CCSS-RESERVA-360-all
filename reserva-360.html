@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#172b4d">
+<title>Reserva 360 | Simulador de previsión económica</title>
+<style>
+:root{
+  --navy:#172b4d;--navy2:#223e68;--ink:#243247;--muted:#66758a;
+  --paper:#f4f7fb;--white:#fff;--line:#e1e8f0;--green:#16845b;
+  --green-soft:#e7f6ef;--orange:#e88924;--orange-soft:#fff3e3;
+  --blue:#3976d7;--blue-soft:#eaf1ff;--red:#c94d4d;--shadow:0 14px 38px rgba(23,43,77,.09);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+button,input,select{font:inherit}
+.topbar{background:linear-gradient(115deg,var(--navy),#294c7b);color:white;padding:18px 22px}
+.top-inner{max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.2px}
+.brand-mark{width:42px;height:42px;border-radius:13px;background:#ffcf62;color:#172b4d;display:grid;place-items:center;font-size:23px;box-shadow:inset 0 -3px 0 #e8aa32}
+.brand small{display:block;font-size:11px;opacity:.72;font-weight:500;letter-spacing:.7px;text-transform:uppercase}
+.top-pill{font-size:12px;border:1px solid #ffffff50;border-radius:99px;padding:7px 12px;color:#edf4ff}
+main{max-width:1120px;margin:30px auto;padding:0 20px 50px}
+.hero{display:grid;grid-template-columns:1.4fr .6fr;gap:20px;align-items:stretch;margin-bottom:22px}
+.hero-copy{padding:12px 2px}
+.eyebrow{color:var(--green);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1.4px}
+h1{font-size:clamp(30px,4.3vw,46px);line-height:1.08;letter-spacing:-1.5px;color:var(--navy);margin:9px 0 13px}
+.hero p{color:var(--muted);max-width:650px;margin:0;font-size:15px}
+.hero-note{background:linear-gradient(145deg,#e9f7ef,#f7fbf8);border:1px solid #ccebd9;border-radius:20px;padding:20px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero-note:after{content:"";position:absolute;width:125px;height:125px;border:20px solid #d2efdf;border-radius:50%;right:-38px;bottom:-55px}
+.hero-note .big-icon{font-size:32px}
+.hero-note strong{color:#146c4b;font-size:16px;margin:7px 0 4px}
+.hero-note span{color:#47715e;font-size:12px;max-width:220px;z-index:1}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);padding:22px;margin-bottom:20px}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:17px}
+.panel h2{margin:0;color:var(--navy);font-size:19px;letter-spacing:-.3px}
+.sub{font-size:12px;color:var(--muted);margin-top:4px}
+.modes{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 19px}
+.mode{border:1px solid var(--line);background:#f9fbfd;color:#506078;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;transition:.18s}
+.mode:hover{border-color:#aabbd1}
+.mode.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 5px 12px #172b4d25}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;font-weight:750;color:#4c5b70}
+.input-wrap{display:flex;align-items:center;border:1px solid #dce4ed;background:#fbfcfe;border-radius:10px;overflow:hidden;transition:.15s}
+.input-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px #3976d71c}
+.prefix{padding-left:12px;color:#8793a4;font-size:13px}
+input[type=number],input[type=text]{width:100%;border:0;outline:0;background:transparent;padding:11px 12px;color:var(--navy);font-weight:700;min-width:0}
+.suffix{padding-right:12px;color:#8793a4;font-size:12px}
+.help{font-size:11px;color:#8490a0}
+.divider{height:1px;background:var(--line);margin:20px 0}
+.section-label{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin:0 0 12px}
+.slider-row{display:grid;grid-template-columns:1fr 72px;align-items:center;gap:14px}
+input[type=range]{width:100%;accent-color:var(--green);cursor:pointer}
+.percent{font-weight:850;color:var(--green);font-size:19px;text-align:right}
+.action-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px}
+.primary{border:0;background:var(--green);color:white;font-weight:800;border-radius:11px;padding:12px 18px;cursor:pointer;box-shadow:0 6px 14px #16845b2b}
+.primary:hover{background:#0f704b}
+.secondary{border:1px solid var(--line);background:white;color:#506078;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:700;cursor:pointer}
+.result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.metric{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fff;min-width:0}
+.metric .label{font-size:11px;color:var(--muted);font-weight:700;min-height:32px}
+.metric .value{font-size:clamp(19px,2.5vw,26px);color:var(--navy);font-weight:850;letter-spacing:-.8px;overflow-wrap:anywhere;margin-top:3px}
+.metric .foot{font-size:10px;color:#8290a2;margin-top:3px}
+.metric.green{background:var(--green-soft);border-color:#ccebd9}.metric.green .value{color:#116b49}
+.metric.orange{background:var(--orange-soft);border-color:#f7dfbc}.metric.orange .value{color:#a85a0b}
+.metric.blue{background:var(--blue-soft);border-color:#d4e2ff}
+.bar-area{margin-top:18px}
+.bar-head{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:750;color:#536176;margin-bottom:8px}
+.track{height:13px;border-radius:20px;background:#edf1f5;overflow:hidden;display:flex}
+.fill{height:100%;transition:width .35s ease;border-radius:20px}
+.fill.savings{background:var(--green)}.fill.costs{background:#f0b24c}.fill.reserve{background:var(--blue)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;color:var(--muted);font-size:11px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.scenario{display:grid;grid-template-columns:1fr 1fr;gap:17px;align-items:center}
+.scenario-box{background:#fff8ed;border:1px solid #f6dfbb;border-radius:14px;padding:16px}
+.scenario-box h3{font-size:14px;color:#9a570f;margin:0 0 5px}
+.scenario-box p{font-size:12px;color:#775c3d;margin:0}
+.scenario-controls{display:flex;align-items:center;gap:10px;margin-top:12px}
+.scenario-controls input{flex:1;accent-color:var(--orange)}
+.shock-value{font-size:15px;font-weight:850;color:#a85a0b;min-width:45px;text-align:right}
+.scenario-result{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small-metric{background:#f8fafc;border:1px solid var(--line);padding:13px;border-radius:12px}
+.small-metric span{display:block;color:var(--muted);font-size:11px}
+.small-metric strong{display:block;color:var(--navy);font-size:20px;margin-top:3px}
+.callout{margin-top:14px;border-left:4px solid var(--blue);background:#f1f6ff;padding:12px 14px;border-radius:0 10px 10px 0;font-size:12px;color:#415a7e}
+.callout.warning{border-color:var(--orange);background:#fff8ed;color:#81541e}
+.insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.insight{padding:15px;border-radius:13px;background:#f8fafc;border:1px solid var(--line)}
+.insight .ico{font-size:21px}
+.insight strong{display:block;color:var(--navy);font-size:13px;margin:5px 0}
+.insight p{font-size:11px;color:var(--muted);margin:0}
+.footer{text-align:center;color:#8a96a6;font-size:11px;padding:6px 10px 0}
+.hidden{display:none!important}
+@media(max-width:760px){main{margin-top:20px;padding:0 13px 35px}.hero{grid-template-columns:1fr}.hero-note{min-height:120px}.result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario{grid-template-columns:1fr}.panel{padding:17px}.insights{grid-template-columns:1fr}.topbar{padding:14px}.top-pill{display:none}}
+@media(max-width:430px){.form-grid{grid-template-columns:1fr}.panel-head{flex-direction:column}.action-row{align-items:stretch;flex-direction:column}.action-row button{width:100%}.metric .label{min-height:auto}}
+@media print{body{background:white}.topbar{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{max-width:none;margin:10px;padding:0}.panel{box-shadow:none;break-inside:avoid}.modes,.action-row,.secondary{display:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="top-inner">
+    <div class="brand"><div class="brand-mark">₿</div><div>RESERVA 360<small>Planifica · Ahorra · Resiste</small></div></div>
+    <div class="top-pill">Simulador educativo de previsión económica</div>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Mayordomía y previsión</div>
+      <h1>Prepárate hoy<br>para lo inesperado.</h1>
+      <p>Explora cómo organizar ingresos, gastos y ahorros. Ajusta los valores y observa cómo un fondo de reserva puede ayudar a una familia o negocio a afrontar una etapa difícil.</p>
+    </div>
+    <aside class="hero-note"><div class="big-icon">🛡️💰</div><strong>La reserva no evita la crisis.</strong><span>Te da tiempo y recursos para responder, adaptarte y recuperarte.</span></aside>
+  </section>
+
+  <section class="panel" aria-labelledby="setup-title">
+    <div class="panel-head"><div><h2 id="setup-title">1. Configura tu escenario</h2><div class="sub">Elige qué tipo de economía quieres simular.</div></div><button class="secondary" id="resetBtn" type="button">Restablecer valores</button></div>
+    <div class="modes" role="group" aria-label="Tipo de escenario">
+      <button class="mode active" data-mode="family" type="button">🏠 Familia</button>
+      <button class="mode" data-mode="business" type="button">🏭 Empresa</button>
+      <button class="mode" data-mode="organization" type="button">🏫 Organización</button>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label id="incomeLabel" for="income">Ingreso mensual total</label><div class="input-wrap"><span class="prefix">S/</span><input id="income" type="number" min="0" step="100" value="3000" inputmode="decimal"></div><span class="help" id="incomeHelp">Suma de los ingresos mensuales del hogar.</span></div>
+      <div class="field"><label for="fixed">Gastos fijos mensuales</label><div class="input-wrap"><span class="prefix">S/</span><input id="fixed" type="number" min="0" step="50" value="1200" inputmode="decimal"></div><span class="help">Pagos habituales: alquiler, servicios, salarios, etc.</span></div>
+      <div class="field"><label for="variable">Gastos variables mensuales</label><div class="input-wrap"><span class="prefix">S/</span><input id="variable" type="number" min="0" step="50" value="900" inputmode="decimal"></div><span class="help" id="variableHelp">Gastos que pueden cambiar cada mes.</span></div>
+      <div class="field"><label for="current">Fondo de reserva actual</label><div class="input-wrap"><span class="prefix">S/</span><input id="current" type="number" min="0" step="100" value="1500" inputmode="decimal"></div><span class="help">Dinero ya ahorrado para imprevistos.</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-label">Tu objetivo de ahorro mensual</div>
+    <div class="slider-row"><input id="rate" type="range" min="0" max="40" step="1" value="10"><div class="percent" id="rateText">10%</div></div>
+    <div class="help">Porcentaje del saldo disponible que deseas destinar al ahorro. Puedes ajustarlo según tu escenario.</div>
+    <div class="action-row"><span class="help">Los resultados se actualizan automáticamente.</span><button class="primary" id="printBtn" type="button">Imprimir / Guardar PDF　↗</button></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>2. Tu panorama económico</h2><div class="sub">Estimación mensual basada en los datos ingresados.</div></div><span class="top-pill" style="background:#eef3fa;color:#536987;border-color:#dbe5f0">Soles peruanos (S/)</span></div>
+    <div class="result-grid">
+      <div class="metric"><div class="label">Ingresos mensuales</div><div class="value" id="rIncome">S/ 3,000</div><div class="foot">Total recibido</div></div>
+      <div class="metric orange"><div class="label">Gastos totales</div><div class="value" id="rExpenses">S/ 2,100</div><div class="foot">Fijos + variables</div></div>
+      <div class="metric green"><div class="label">Ahorro mensual estimado</div><div class="value" id="rSaving">S/ 90</div><div class="foot">Según porcentaje elegido</div></div>
+      <div class="metric blue"><div class="label">Saldo después de ahorrar</div><div class="value" id="rBalance">S/ 810</div><div class="foot">Disponible no asignado</div></div>
+    </div>
+    <div class="bar-area"><div class="bar-head"><span>Distribución del ingreso</span><span id="distributionText">70% gastos · 3% ahorro · 27% disponible</span></div><div class="track"><div class="fill costs" id="costBar" style="width:70%"></div><div class="fill savings" id="savingBar" style="width:3%"></div><div class="fill reserve" id="balanceBar" style="width:27%"></div></div><div class="legend"><span><i class="dot" style="background:#f0b24c"></i>Gastos</span><span><i class="dot" style="background:#16845b"></i>Ahorro</span><span><i class="dot" style="background:#3976d7"></i>Saldo disponible</span></div></div>
+    <div class="callout" id="status">Tu escenario tiene saldo positivo. Puedes evaluar cuánto ahorrar sin descuidar los gastos esenciales.</div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>3. Simula una etapa de crisis</h2><div class="sub">¿Qué pasaría si los ingresos o pedidos disminuyeran?</div></div></div>
+    <div class="scenario">
+      <div class="scenario-box">
+        <h3>Caída de ingresos / actividad</h3>
+        <p>Modifica el porcentaje de reducción para representar una recesión. En el caso de la familia Ramos, los pedidos del taller disminuyen un 60%.</p>
+        <div class="scenario-controls"><input id="shock" type="range" min="0" max="90" step="5" value="60"><div class="shock-value" id="shockText">60%</div></div>
+      </div>
+      <div class="scenario-result">
+        <div class="small-metric"><span>Ingreso tras la caída</span><strong id="crisisIncome">S/ 1,200</strong></div>
+        <div class="small-metric"><span>Saldo tras gastos</span><strong id="crisisBalance">−S/ 900</strong></div>
+        <div class="small-metric"><span>Reserva actual</span><strong id="crisisReserve">S/ 1,500</strong></div>
+        <div class="small-metric"><span>Meses cubiertos*</span><strong id="months">1.7</strong></div>
+      </div>
+    </div>
+    <div class="callout warning" id="crisisMessage">La reserva puede cubrir temporalmente el déficit mensual. Reducir gastos y buscar ingresos alternativos ayuda a prolongar su duración.</div>
+    <div class="help" style="margin-top:8px">*Estimación ilustrativa: reserva actual dividida entre el déficit mensual. No es una garantía y no contempla cambios en los gastos ni nuevos ingresos.</div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>4. Ruta de previsión</h2><div class="sub">Acciones que convierten el ahorro en una estrategia.</div></div></div>
+    <div class="insights">
+      <div class="insight"><div class="ico">🪙</div><strong>Construir la reserva</strong><p>Separar una parte de los ingresos en épocas favorables y establecer una meta realista.</p></div>
+      <div class="insight"><div class="ico">🧭</div><strong>Priorizar en la crisis</strong><p>Identificar gastos esenciales, reducir costos prescindibles y usar la reserva con control.</p></div>
+      <div class="insight"><div class="ico">🌱</div><strong>Preparar la recuperación</strong><p>Adaptar la actividad, explorar nuevos mercados y reponer el fondo cuando mejoren los ingresos.</p></div>
+    </div>
+  </section>
+  <section class="panel" style="background:#172b4d;color:white;border:0">
+    <div style="font-size:12px;color:#a9d8bf;font-weight:800;letter-spacing:1px;text-transform:uppercase">Idea clave</div>
+    <div style="font-size:clamp(19px,3vw,26px);font-weight:800;line-height:1.25;margin-top:7px">“Ahorrar en tiempos de prosperidad permite afrontar con mayor preparación los tiempos de dificultad”.</div>
+    <p style="font-size:12px;color:#c6d3e5;margin:10px 0 0">La previsión no elimina los riesgos económicos, pero puede dar margen para tomar decisiones y adaptarse.</p>
+  </section>
+  <div class="footer">RESERVA 360 · Herramienta educativa. Los valores son ejemplos editables y no constituyen asesoramiento financiero.</div>
+</main>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const modes={
+  family:{income:"Ingreso mensual total del hogar",incomeHelp:"Suma de los ingresos mensuales de la familia.",variable:"Gastos variables mensuales",variableHelp:"Alimentación, transporte y otros gastos cambiantes.",income:3000,fixed:1200,variable:900,current:1500},
+  business:{income:"Ingresos / ventas mensuales",incomeHelp:"Ventas o ingresos promedio del negocio.",variable:"Costos variables mensuales",variableHelp:"Materiales, producción, transporte y otros costos variables.",income:12000,fixed:4500,variable:4200,current:5000},
+  organization:{income:"Ingresos mensuales de la organización",incomeHelp:"Recursos recibidos durante un mes.",variable:"Gastos variables mensuales",variableHelp:"Actividades, insumos y gastos que pueden variar.",income:8000,fixed:3000,variable:2500,current:4000}
+ };
+ let mode="family";
+ const money=n=>"S/ "+Math.round(n).toLocaleString("es-PE");
+ const val=id=>Math.max(0,Number($(id).value)||0);
+ function render(){
+  const income=val("income"),fixed=val("fixed"),variable=val("variable"),reserve=val("current"),rate=Number($("rate").value)/100,shock=Number($("shock").value)/100;
+  const expenses=fixed+variable,available=income-expenses,saving=Math.max(0,available)*rate,balance=available-saving;
+  $("rateText").textContent=Math.round(rate*100)+"%";
+  $("rIncome").textContent=money(income);$("rExpenses").textContent=money(expenses);$("rSaving").textContent=money(saving);$("rBalance").textContent=money(balance);
+  const positive=income>0,expensePct=positive?Math.min(100,expenses/income*100):0,savingPct=positive?Math.min(100,saving/income*100):0,balancePct=positive?Math.max(0,100-expensePct-savingPct):0;
+  $("costBar").style.width=expensePct+"%";$("savingBar").style.width=savingPct+"%";$("balanceBar").style.width=balancePct+"%";
+  $("distributionText").textContent=(positive?Math.round(expensePct):0)+"% gastos · "+(positive?Math.round(savingPct):0)+"% ahorro · "+(positive?Math.round(balancePct):0)+"% disponible";
+  const status=$("status");
+  if(income===0){status.textContent="Ingresa un monto de ingresos para visualizar la distribución."}
+  else if(available<0){status.textContent="Atención: los gastos superan los ingresos. Revisa los costos antes de fijar una meta de ahorro.";status.className="callout warning"}
+  else if(available===0){status.textContent="Tus ingresos cubren exactamente los gastos. Revisa si es posible reducir costos antes de planificar el ahorro.";status.className="callout warning"}
+  else{status.textContent="Tu escenario tiene saldo positivo. Puedes evaluar cuánto ahorrar sin descuidar los gastos esenciales.";status.className="callout"}
+  const crisisIncome=income*(1-shock),crisisBalance=crisisIncome-expenses,deficit=Math.max(0,-crisisBalance),months=deficit>0?(reserve/deficit):null;
+  $("shockText").textContent=Math.round(shock*100)+"%";$("crisisIncome").textContent=money(crisisIncome);$("crisisBalance").textContent=(crisisBalance<0?"−":"")+money(Math.abs(crisisBalance));$("crisisReserve").textContent=money(reserve);$("months").textContent=deficit===0?(reserve>0?"No se consume":"0"):(months.toFixed(1)+"");
+  const msg=$("crisisMessage");
+  if(income===0){msg.textContent="Ingresa los ingresos para simular el efecto de una caída económica."}
+  else if(deficit===0){msg.textContent="Con estos valores, los ingresos reducidos aún cubren los gastos ingresados. La reserva podría conservarse para imprevistos.";msg.className="callout"}
+  else if(reserve===0){msg.textContent="No hay una reserva disponible y el escenario presenta un déficit. La prioridad sería revisar gastos y buscar alternativas de ingreso.";msg.className="callout warning"}
+  else{msg.textContent="La reserva puede cubrir aproximadamente "+months.toFixed(1)+" mes(es) del déficit calculado. Reducir gastos y buscar ingresos alternativos ayuda a prolongar su duración.";msg.className="callout warning"}
+ }
+ document.querySelectorAll(".mode").forEach(btn=>btn.addEventListener("click",()=>{
+  mode=btn.dataset.mode;document.querySelectorAll(".mode").forEach(b=>b.classList.toggle("active",b===btn));
+  const m=modes[mode];$("incomeLabel").textContent=m.income;$("incomeHelp").textContent=m.incomeHelp;$("variable").parentElement.previousElementSibling.textContent=m.variable;$("variableHelp").textContent=m.variableHelp;
+  $("income").value=m.income;$("fixed").value=m.fixed;$("variable").value=m.variable;$("current").value=m.current;render();
+ }));
+ ["income","fixed","variable","current","rate","shock"].forEach(id=>$(id).addEventListener("input",render));
+ $("resetBtn").addEventListener("click",()=>{document.querySelector('.mode[data-mode="family"]').click();$("rate").value=10;$("shock").value=60;render()});
+ $("printBtn").addEventListener("click",()=>window.print());
+ render();
+})();
+</script>
+</body>
+</html>
