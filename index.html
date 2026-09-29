@@ -224,5 +224,104 @@ input[type=range]{width:100%;accent-color:var(--green);cursor:pointer}
  render();
 })();
 </script>
+  <!-- MENSAJE BÍBLICO -->
+<section class="mensaje-biblico">
+    <div class="mensaje-biblico-contenido">
+        <span class="mensaje-biblico-icono">📖</span>
+        <h2>Mensaje bíblico</h2>
+
+        <p class="versiculo">
+            “Los pensamientos del diligente ciertamente tienden a la abundancia.”
+        </p>
+
+        <p class="referencia">
+            Proverbios 21:5
+        </p>
+
+        <p class="reflexion">
+            La Biblia también nos anima a actuar con responsabilidad,
+            planificar y administrar sabiamente los recursos que tenemos.
+        </p>
+    </div>
+</section>
+
+<style>
+    .mensaje-biblico {
+        width: 100%;
+        padding: 50px 20px;
+        box-sizing: border-box;
+        background: #f5f4ef;
+    }
+
+    .mensaje-biblico-contenido {
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 35px 30px;
+        text-align: center;
+        background: #ffffff;
+        border: 2px solid #ff8c00;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(61, 30, 20, 0.10);
+    }
+
+    .mensaje-biblico-icono {
+        display: block;
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .mensaje-biblico h2 {
+        margin: 0 0 20px;
+        color: #ff8c00;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .mensaje-biblico .versiculo {
+        margin: 0 auto 10px;
+        max-width: 700px;
+        color: #3d1e14;
+        font-size: 21px;
+        line-height: 1.6;
+        font-weight: 600;
+        font-style: italic;
+    }
+
+    .mensaje-biblico .referencia {
+        margin: 0 0 22px;
+        color: #ff8c00;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .mensaje-biblico .reflexion {
+        max-width: 680px;
+        margin: 0 auto;
+        color: #3d1e14;
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+        .mensaje-biblico {
+            padding: 35px 15px;
+        }
+
+        .mensaje-biblico-contenido {
+            padding: 28px 20px;
+        }
+
+        .mensaje-biblico h2 {
+            font-size: 24px;
+        }
+
+        .mensaje-biblico .versiculo {
+            font-size: 18px;
+        }
+
+        .mensaje-biblico .reflexion {
+            font-size: 15px;
+        }
+    }
 </body>
 </html>
